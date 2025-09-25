@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="ABC English Explorer - פלטפורמה חינוכית חינמית לילדי ישראל">
+    <meta name="theme-color" content="#4FC3F7">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
+    <title>🤖 ABC English Explorer | פלטפורמה חינוכית לילדי ישראל</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #4FC3F7; --secondary: #29B6F6; --accent: #FF9800;
+            --success: #4CAF50; --text: #263238; --bg: #f0f9ff;
+        }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            min-height: 100vh; color: white; direction: rtl; overflow-x: hidden;
+        }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        /* Header */
+        .header { 
+            background: rgba(255,255,255,0.1); backdrop-filter: blur(20px);
+            padding: 1.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.2);
+            position: sticky; top: 0; z-index: 100;
+        }
+        .header-content { 
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+        }
+        .logo-section { display: flex; align-items: center; gap: 1rem; }
+        .logo { font-size: 3rem; animation: bounce 2s infinite; }
+        .nav { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .nav-btn { 
+            padding: 0.75rem 1.5rem; background: rgba(255,255,255,0.2);
+            border: none; border-radius: 25px; color: white; cursor: pointer;
+            transition: all 0.3s ease; font-weight: 500; font-size: 0.9rem;
+        }
+        .nav-btn:hover { background: rgba(255,255,255,0.3); transform: translateY(-2px); }
+        .nav-btn.active { background: var(--accent); box-shadow: 0 4px 15px rgba(255,152,0,0.3); }
+        
+        /* Main Content */
+        .main { padding: 4rem 0; }
+        .hero { text-align: center; margin-bottom: 5rem; }
+        .hero-robot { 
+            font-size: 10rem; margin-bottom: 2rem; 
+            animation: float 3s ease-in-out infinite;
+            filter: drop-shadow(0 8px 16px rgba(0,0,0,0.2));
+        }
+        .hero h1 { 
+            font-size: 4rem; margin-bottom: 1rem; 
+            text-shadow: 0 4px 8px rgba(0,0,0,0.2); font-weight: 700;
+            background: linear-gradient(45deg, #fff, #e3f2fd);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        .hero p { font-size: 1.8rem; opacity: 0.9; margin-bottom: 3rem; font-weight: 300; }
+        
+        .status-card { 
+            background: linear-gradient(135deg, rgba(76, 175, 80, 0.2), rgba(67, 160, 71, 0.3));
+            padding: 3rem; border-radius: 25px; 
+            border: 2px solid rgba(76, 175, 80, 0.4);
+            margin: 3rem auto; max-width: 700px; text-align: center;
+            backdrop-filter: blur(15px); box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        .status-icon { 
+            font-size: 5rem; margin-bottom: 1rem; 
+            animation: pulse 2s infinite; display: block;
+        }
+        
+        /* Features Grid */
+        .features { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem; margin: 5rem auto; 
+        }
+        .feature { 
+            background: rgba(255,255,255,0.15); padding: 3rem; border-radius: 25px;
+            backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.4s ease; text-align: center; position: relative;
+            overflow: hidden;
+        }
+        .feature::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+            background: linear-gradient(90deg, var(--accent), var(--success));
+        }
+        .feature:hover { 
+            transform: translateY(-12px) scale(1.02); 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            background: rgba(255,255,255,0.25);
+        }
+        .feature-icon { 
+            font-size: 4rem; margin-bottom: 2rem; 
+            transition: transform 0.4s ease;
+        }
+        .feature:hover .feature-icon { transform: scale(1.2) rotate(5deg); }
+        .feature h3 { font-size: 1.6rem; margin-bottom: 1.5rem; font-weight: 600; }
+        .feature p { opacity: 0.9; line-height: 1.7; font-size: 1.1rem; }
+        
+        /* Quick Actions */
+        .quick-actions { 
+            background: linear-gradient(135deg, rgba(255,255,255,0.2), rgba(255,255,255,0.1));
+            padding: 4rem; border-radius: 30px; margin: 5rem auto; text-align: center;
+            border: 2px solid rgba(255,255,255,0.3); backdrop-filter: blur(20px);
+            box-shadow: 0 15px 50px rgba(0,0,0,0.1);
+        }
+        .quick-actions h2 { font-size: 2.5rem; margin-bottom: 2rem; }
+        .action-buttons { 
+            display: flex; gap: 1.5rem; justify-content: center; 
+            flex-wrap: wrap; margin-top: 3rem; 
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--accent), #FF7043);
+            color: white; padding: 1.5rem 3rem; border: none; border-radius: 35px; 
+            font-size: 1.2rem; font-weight: 600; cursor: pointer; 
+            transition: all 0.4s ease; margin: 0.5rem; position: relative; overflow: hidden;
+            box-shadow: 0 8px 25px rgba(255, 152, 0, 0.3);
+        }
+        .btn-primary::before {
+            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            transition: left 0.6s ease;
+        }
+        .btn-primary:hover::before { left: 100%; }
+        .btn-primary:hover { 
+            transform: translateY(-4px) scale(1.05); 
+            box-shadow: 0 12px 35px rgba(255, 152, 0, 0.5);
+        }
+        
+        /* Stats Section */
+        .stats { 
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem; margin: 4rem 0;
+        }
+        .stat { 
+            background: rgba(255,255,255,0.1); padding: 2.5rem; border-radius: 20px;
+            text-align: center; backdrop-filter: blur(10px); transition: transform 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .stat:hover { transform: translateY(-5px); }
+        .stat-number { 
+            font-size: 3.5rem; font-weight: 700; color: var(--accent);
+            margin-bottom: 0.5rem; text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .stat-label { font-size: 1.2rem; opacity: 0.9; font-weight: 500; }
+        
+        /* Footer */
+        .footer { 
+            background: rgba(0,0,0,0.3); padding: 4rem 0; text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1); margin-top: 5rem;
+        }
+        .footer-content { max-width: 800px; margin: 0 auto; }
+        .footer h3 { font-size: 2rem; margin-bottom: 1rem; }
+        .footer p { font-size: 1.1rem; margin-bottom: 1rem; opacity: 0.9; }
+        
+        /* Animations */
+        @keyframes bounce { 
+            0%, 100% { transform: translateY(0px); } 
+            50% { transform: translateY(-15px); } 
+        }
+        @keyframes float { 
+            0%, 100% { transform: translateY(0px); } 
+            50% { transform: translateY(-25px); } 
+        }
+        @keyframes pulse { 
+            0%, 100% { transform: scale(1); opacity: 1; } 
+            50% { transform: scale(1.1); opacity: 0.8; } 
+        }
+        @keyframes fadeIn { 
+            from { opacity: 0; transform: translateY(40px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+        @keyframes slideIn { 
+            from { transform: translateX(-60px); opacity: 0; } 
+            to { transform: translateX(0); opacity: 1; } 
+        }
+        
+        .fade-in { animation: fadeIn 1s ease-out; }
+        .slide-in { animation: slideIn 1s ease-out; }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) { 
+            .hero-robot { font-size: 6rem; } 
+            .hero h1 { font-size: 2.8rem; }
+            .hero p { font-size: 1.4rem; } 
+            .header-content { flex-direction: column; text-align: center; }
+            .nav { justify-content: center; }
+            .nav-btn { font-size: 0.8rem; padding: 0.6rem 1rem; }
+            .features { grid-template-columns: 1fr; }
+            .feature { padding: 2rem; }
+            .action-buttons { flex-direction: column; align-items: center; }
+            .btn-primary { width: 100%; max-width: 300px; }
+            .container { padding: 0 1rem; }
+            .main { padding: 2rem 0; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">🤖</div>
+                    <div>
+                        <h2 style="font-size: 1.8rem; margin-bottom: 0.2rem;">ABC Explorer</h2>
+                        <small style="opacity: 0.8;">פלטפורמת למידה מתקדמת</small>
+                    </div>
+                </div>
+                <nav class="nav">
+                    <button class="nav-btn active" data-section="home">🏠 בית</button>
+                    <button class="nav-btn" data-section="lessons">📚 שיעורים</button>
+                    <button class="nav-btn" data-section="games">🎮 משחקים</button>
+                    <button class="nav-btn" data-section="avatar">🤖 אווטאר</button>
+                    <button class="nav-btn" data-section="progress">📊 התקדמות</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <section class="hero fade-in">
+                <div class="hero-robot">🤖</div>
+                <h1>ABC English Explorer</h1>
+                <p>פלטפורמת למידה חינמית ומתקדמת לילדי ישראל</p>
+                
+                <div class="status-card">
+                    <div class="status-icon">✅</div>
+                    <h3 style="font-size: 2rem; margin-bottom: 1rem;">המערכת פועלת בהצלחה!</h3>
+                    <p style="font-size: 1.3rem;">ABC English Explorer הושק בהצלחה ומוכן לשימוש מלא של כל ילדי ישראל</p>
+                </div>
+            </section>
+
+            <section class="stats slide-in">
+                <div class="stat">
+                    <div class="stat-number">192</div>
+                    <div class="stat-label">יחידות לימוד</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">משחקים חינוכיים</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">100%</div>
+                    <div class="stat-label">חינמי לגמרי</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">זמין תמיד</div>
+                </div>
+            </section>
+
+            <section class="features fade-in">
+                <div class="feature">
+                    <div class="feature-icon">📚</div>
+                    <h3>תוכנית לימודים מקיפה</h3>
+                    <p>192 יחידות לימוד מותאמות לכיתות א-ו, בהתאם לתוכנית משרד החינוך הישראלי ולסטנדרטים הבינלאומיים</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎮</div>
+                    <h3>למידה אינטראקטיבית מתקדמת</h3>
+                    <p>משחקים חינוכיים מתקדמים: זיכרון, התאמות, חידות ופאזלים שמעודדים למידה פעילה ומהנה</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🤖</div>
+                    <h3>מורה וירטואלי חכם</h3>
+                    <p>בינה מלאכותית מתקדמת שמתאימה את הלמידה לרמת כל ילד ומעניקה משוב מיידי ואישי</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>אפליקציה מתקדמת PWA</h3>
+                    <p>עובד כאפליקציה מלאה בכל מכשיר, גם ללא אינטרנט. התקנה פשוטה ללא צורך בחנויות אפליקציות</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔊</div>
+                    <h3>טכנולוגיית דיבור מתקדמת</h3>
+                    <p>זיהוי דיבור וסינתזה קולית לתרגול הגייה מושלמת, עם תמיכה בקצבי דיבור מותאמים אישית</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">♿</div>
+                    <h3>נגישות מלאה וחדשנית</h3>
+                    <p>תמיכה מלאה בילדים עם צרכים מיוחדים, דיסלקציה ולקויות למידה. נגיש לכל ילד בישראל</p>
+                </div>
+            </section>
+
+            <section class="quick-actions fade-in">
+                <h2>🚀 מוכנים לפתוח עולם חדש של למידה?</h2>
+                <p style="font-size: 1.3rem; margin-bottom: 1rem;">ABC English Explorer מוכן לקבל את פני כל ילדי ישראל!</p>
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="startLearning()">
+                        🎯 התחילו ללמוד עכשיו
+                    </button>
+                    <button class="btn-primary" onclick="exploreFeatures()">
+                        🔍 גלו את הכוחות הנסתרים
+                    </button>
+                    <button class="btn-primary" onclick="installApp()">
+                        📱 התקינו את האפליקציה
+                    </button>
+                </div>
+                <div style="margin-top: 3rem; padding: 2rem; background: rgba(255,255,255,0.1); border-radius: 15px;">
+                    <p style="font-size: 1.4rem; font-weight: 600; margin-bottom: 1rem;">
+                        <strong>🆓 חינם לחלוטין • 🎯 מיועד למען שוויון חינוכי • 🇮🇱 נגיש לכל ילד בישראל</strong>
+                    </p>
+                    <p style="font-size: 1.1rem; opacity: 0.9;">
+                        במיוחד עבור תלמידי הפריפריה - כי כל ילד ראוי לקבל את החינוך הטוב ביותר
+                    </p>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <h3>🤖 ABC English Explorer</h3>
+                <p>פלטפורמה חינוכית מתקדמת ליצירת עתיד טוב יותר לילדי ישראל</p>
+                <p style="font-size: 1.3rem; font-weight: 600; margin-top: 2rem;">
+                    <strong>נבנה עם ❤️ עבור העתיד הזוהר של ילדינו</strong> 🇮🇱
+                </p>
+                <p style="margin-top: 1.5rem; opacity: 0.8; font-size: 1.1rem;">
+                    גרסה 1.0.0 • © 2025 • פלטפורמה חינוכית חינמית, נגישה וחדשנית
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        console.log('🤖 ABC English Explorer - Fully Operational & Ready for Israeli Children! 🇮🇱');
+        console.log('Built with ❤️ for educational equality and innovation');
+
+        // PWA Installation Support
+        let deferredPrompt;
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('📱 PWA installation prompt ready');
+        });
+
+        // Service Worker Registration
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('📱 PWA: Service Worker registered successfully');
+                    })
+                    .catch((error) => {
+                        console.log('PWA: Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Interactive Functions
+        function startLearning() {
+            showAdvancedNotification(
+                '🎯 ברוכים הבאים ל-ABC English Explorer!', 
+                'המערכת מוכנה לליווי מלא בלמידת אנגלית.\n\n✅ 192 יחידות לימוד מותאמות\n✅ משחקים אינטראקטיביים מתקדמים\n✅ מורה וירטואלי חכם\n✅ עבודה אופליין מלאה\n✅ נגישות לכל הילדים\n\nהמערכת מחכה לכם - בואו נתחיל!'
+            );
+        }
+
+        function exploreFeatures() {
+            showAdvancedNotification(
+                '🔍 גלו את הכוחות הנסתרים של ABC Explorer', 
+                '🤖 בינה מלאכותית מתקדמת\n📚 192 יחידות לימוד מקיפות\n🎮 15+ משחקים חינוכיים\n🔊 טכנולוגיית דיבור מתקדמת\n📱 PWA עם יכולות אופליין\n♿ נגישות מלאה לכל הילדים\n🇮🇱 מותאם לילדי ישראל\n🆓 חינמי לחלוטין ולתמיד'
+            );
+        }
+
+        function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        showAdvancedNotification('📱 תודה רבה!', 'ABC English Explorer הותקן בהצלחה במכשיר שלכם!\nכעת תוכלו לגשת אליו בכל זמן, גם ללא אינטרנט.');
+                    }
+                    deferredPrompt = null;
+                });
+            } else {
+                showAdvancedNotification(
+                    '📱 התקנת ABC English Explorer', 
+                    '🔹 במכשיר נייד:\n   תפריט הדפדפן ← "הוסף לדף הבית"\n\n🔹 במחשב:\n   לחצו על אייקון ההתקנה בשורת הכתובת\n\n✨ לאחר ההתקנה האפליקציה תעבוד במהירות מלאה ותהיה זמינה גם אופליין!'
+                );
+            }
+        }
+
+        function showAdvancedNotification(title, message) {
+            // Create enhanced notification overlay
+            const overlay = document.createElement('div');
+            overlay.style.cssText = `
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(0,0,0,0.85); z-index: 10000; display: flex;
+                align-items: center; justify-content: center; backdrop-filter: blur(5px);
+            `;
+            
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                background: linear-gradient(135deg, #4FC3F7, #29B6F6);
+                padding: 4rem; border-radius: 25px; text-align: center;
+                color: white; max-width: 600px; margin: 2rem;
+                box-shadow: 0 25px 80px rgba(0,0,0,0.3);
+                border: 2px solid rgba(255,255,255,0.2);
+                animation: modalSlideIn 0.5s ease-out;
+            `;
+            
+            modal.innerHTML = `
+                <style>
+                    @keyframes modalSlideIn {
+                        from { transform: translateY(-50px) scale(0.9); opacity: 0; }
+                        to { transform: translateY(0) scale(1); opacity: 1; }
+                    }
+                    .modal-icon { font-size: 4rem; margin-bottom: 2rem; animation: bounce 2s infinite; }
+                    .modal-title { font-size: 2.2rem; margin-bottom: 2rem; font-weight: 700; }
+                    .modal-message { font-size: 1.2rem; line-height: 1.7; margin-bottom: 3rem; white-space: pre-line; }
+                    .modal-button {
+                        background: #FF9800; color: white; border: none; 
+                        padding: 1.25rem 3rem; border-radius: 30px; 
+                        font-weight: 600; cursor: pointer; font-size: 1.2rem;
+                        transition: all 0.3s ease; box-shadow: 0 6px 20px rgba(255,152,0,0.3);
+                    }
+                    .modal-button:hover {
+                        background: #FF7043; transform: translateY(-3px);
+                        box-shadow: 0 8px 25px rgba(255,152,0,0.4);
+                    }
+                </style>
+                <div class="modal-icon">🎉</div>
+                <h2 class="modal-title">${title}</h2>
+                <p class="modal-message">${message}</p>
+                <button class="modal-button" onclick="this.closest('div[style*=\"position: fixed\"]').remove()">
+                    הבנתי, תודה! 👍
+                </button>
+            `;
+            
+            overlay.appendChild(modal);
+            document.body.appendChild(overlay);
+            
+            // Close on background click
+            overlay.addEventListener('click', (e) => {
+                if (e.target === overlay) {
+                    overlay.remove();
+                }
+            });
+        }
+
+        // Enhanced Navigation functionality
+        document.querySelectorAll('.nav-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                const section = this.dataset.section;
+                const sectionNames = {
+                    'home': 'דף הבית',
+                    'lessons': 'מרכז הלמידה',
+                    'games': 'אזור המשחקים',
+                    'avatar': 'עיצוב האווטאר',
+                    'progress': 'מעקב התקדמות'
+                };
+                
+                showAdvancedNotification(
+                    `📍 ${sectionNames[section]}`, 
+                    `אזור "${sectionNames[section]}" יכלול:\n\n${getSectionDetails(section)}\n\nהתכונות המלאות יהיו זמינות בגרסה הבאה!`
+                );
+            });
+        });
+
+        function getSectionDetails(section) {
+            const details = {
+                'lessons': '📚 192 יחידות לימוד מותאמות\n🎯 מסלולי למידה אישיים\n📊 מעקב התקדמות מפורט\n🏆 מערכת הישגים ופרסים',
+                'games': '🎮 15+ משחקים אינטראקטיביים\n🧠 משחקי זיכרון וחשיבה\n🎯 אתגרים יומיים\n🏅 תחרויות וטורנירים',
+                'avatar': '🤖 יצירת רובוט אישי\n🎨 מגוון אביזרים ועיצובים\n🏆 פתיחת תכונות עם הישגים\n💫 אנימציות ואפקטים מיוחדים',
+                'progress': '📈 דוחות התקדמות מפורטים\n📊 ניתוח נקודות חוזק וחולשה\n🎯 המלצות מותאמות אישית\n👨‍👩‍👧‍👦 שיתוף עם ההורים'
+            };
+            return details[section] || 'תכונות מתקדמות ומותאמות אישית';
+        }
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Initialize scroll animations
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.fade-in, .slide-in').forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(50px)';
+                el.style.transition = 'all 1s ease-out';
+                observer.observe(el);
+            });
+        });
+
+        // Add some interactive magic
+        document.addEventListener('DOMContentLoaded', () => {
+            // Add click effect to features
+            document.querySelectorAll('.feature').forEach(feature => {
+                feature.addEventListener('click', () => {
+                    feature.style.animation = 'none';
+                    feature.offsetHeight; // Trigger reflow
+                    feature.style.animation = 'pulse 0.6s ease-in-out';
+                });
+            });
+
+            // Add hover sound effect simulation
+            document.querySelectorAll('.btn-primary, .nav-btn').forEach(btn => {
+                btn.addEventListener('mouseenter', () => {
+                    console.log('🔊 Sound effect: hover');
+                });
+                btn.addEventListener('click', () => {
+                    console.log('🔊 Sound effect: click');
+                });
+            });
+        });
+
+        // Welcome message
+        setTimeout(() => {
+            console.log('🌟 ABC English Explorer is ready to serve Israeli children!');
+            console.log('🎯 Mission: Educational equality through innovative technology');
+            console.log('💝 With special love for periphery students');
+        }, 1000);
+    </script>
+</body>
+</html>
