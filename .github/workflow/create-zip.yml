@@ -1,1 +1,0 @@
-Compress-Archive -Path "ABC-English-Explorer-Site\*" -DestinationPath "ABC-English-Explorer-Site.zip" -Force
